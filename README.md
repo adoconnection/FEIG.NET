@@ -1,5 +1,5 @@
 # FEIG.NET
-Pure C# client for FEIL LRU readers
+Pure C# client for FEIG LRU readers
 
 Example:
 
