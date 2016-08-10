@@ -1,6 +1,6 @@
 ﻿namespace FeigDotNet.Configuration
 {
-    public enum ReaderMode
+    public enum FeigReaderMode
     {
         HostMode = 0x00,
         ScanMode = 0x01,

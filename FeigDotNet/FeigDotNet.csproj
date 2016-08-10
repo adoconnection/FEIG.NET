@@ -40,11 +40,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Configuration\LRU1002InterfaceModereaderConfiguration.cs" />
+    <Compile Include="Configuration\LRU1002AnticollisionReaderConfiguration.cs" />
+    <Compile Include="Configuration\LRU1002InterfaceModeReaderConfiguration.cs" />
+    <Compile Include="Configuration\LRU1002MultiplexerReaderConfiguration.cs" />
+    <Compile Include="Configuration\LRU1002PersistenceModeReaderConfiguration.cs" />
     <Compile Include="Configuration\LRU1002RFInterfaceReaderConfiguration.cs" />
-    <Compile Include="Configuration\FeigReaderConfiguration.cs" />
-    <Compile Include="Configuration\ReaderMode.cs" />
+    <Compile Include="Configuration\FeigReaderConfigurationBank.cs" />
+    <Compile Include="Configuration\FeigReaderAntenna.cs" />
+    <Compile Include="Configuration\FeigReaderMode.cs" />
     <Compile Include="FeigException.cs" />
+    <Compile Include="FeigTag.cs" />
     <Compile Include="Readers\LRU1002Reader.cs" />
     <Compile Include="Readers\LRUReader.cs" />
     <Compile Include="Connections\FeigReaderConnection.cs" />

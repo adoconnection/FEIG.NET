@@ -84,6 +84,11 @@ namespace FeigDotNet.Connections
             byte[] responseTypeBuffer = new byte[1];
             this.tcpConnection.Receive(responseTypeBuffer);
 
+            if (responseTypeBuffer[0] != 0x02)
+            {
+                throw new Exception("Connection issue");
+            }
+
             byte[] dataLengthBuffer = new byte[2];
             this.tcpConnection.Receive(dataLengthBuffer);
 
