@@ -8,7 +8,7 @@ using (FeigReaderTcpConnection connection = new FeigReaderTcpConnection("192.168
 {
     LRU1002Reader reader = new LRU1002Reader(connection);
 
-    IList<FeigTag> tags = reader.Inventory();
+    IList<FeigTag> tags = reader.Inventory(FeigReaderAntenna.Antenna1, FeigReaderAntenna.Antenna2);
 
     foreach (FeigTag tag in tags)
     {
@@ -29,7 +29,7 @@ using (FeigReaderTcpConnection connection = new FeigReaderTcpConnection("192.168
 {
     LRU1002Reader reader = new LRU1002Reader(connection);
 
-    reader.InterfaceMode.ReaderMode = ReaderMode.HostMode;
+    reader.InterfaceMode.ReaderMode = FeigReaderMode.HostMode;
     reader.RFInterface.Antenna1Power = 1.1;
     reader.RFInterface.Antenna2Power = 1.2;
     reader.RFInterface.Antenna3Power = 1.3;
