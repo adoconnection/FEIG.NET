@@ -8,11 +8,14 @@ using (FeigReaderTcpConnection connection = new FeigReaderTcpConnection("192.168
 {
     LRU1002Reader reader = new LRU1002Reader(connection);
 
-    IList<byte[]> tags = reader.Inventory();
+    IList<FeigTag> tags = reader.Inventory();
 
-    foreach (byte[] tagSerialNumberBytes in tags)
+    foreach (FeigTag tag in tags)
     {
-        // process tags
+        // process
+        // tag.Antenna
+        // tag.SerialNumber
+        // tag.RSSI
     }
 }
 
@@ -27,12 +30,12 @@ using (FeigReaderTcpConnection connection = new FeigReaderTcpConnection("192.168
     LRU1002Reader reader = new LRU1002Reader(connection);
 
     reader.InterfaceMode.ReaderMode = ReaderMode.HostMode;
-    reader.InterfaceMode.Write();
-
-    reader.RFInterface.AntennaPower = 1.6;
-    reader.RFInterface.Write();
-
-    reader.RFControllerReset(); // apply changes
+    reader.RFInterface.Antenna1Power = 1.1;
+    reader.RFInterface.Antenna2Power = 1.2;
+    reader.RFInterface.Antenna3Power = 1.3;
+    reader.RFInterface.Antenna4Power = 1.4;
+            
+    reader.ApplyConfigurationChanges();
 }
 
 ```
