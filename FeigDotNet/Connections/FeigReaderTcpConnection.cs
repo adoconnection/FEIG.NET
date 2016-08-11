@@ -32,7 +32,6 @@ namespace FeigDotNet.Connections
             this.tcpConnection.SendTimeout = this.timeout;
 
             this.tcpConnection.Connect(new IPEndPoint(IPAddress.Parse(this.readerHostAddress), this.readerPortNumber));
-
             this.isConnected = true;
         }
 

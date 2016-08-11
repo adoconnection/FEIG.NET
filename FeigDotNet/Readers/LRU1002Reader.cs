@@ -3,6 +3,7 @@ using System.IO;
 using System.Text;
 using FeigDotNet.Configuration;
 using FeigDotNet.Connections;
+using FeigDotNet.Exceptions;
 
 namespace FeigDotNet.Readers
 {
@@ -59,7 +60,7 @@ namespace FeigDotNet.Readers
                 byte type = reader.ReadByte();
                 byte[] ps = reader.ReadBytes(2);
 
-                switch (type)
+                switch (type) // type = number of bytes + 2, should we remove the switch? 
                 {
                     case 0x12:
                         tags.Add(new FeigTag { SerialNumber = reader.ReadBytes(16)});
@@ -97,7 +98,6 @@ namespace FeigDotNet.Readers
             byte[] readBytes = reader.ReadBytes(3);
 
             short tagsCount = reader.ReadByte();
-         //   reader.ReadByte();
 
             IList<FeigTag> tags = new List<FeigTag>();
 
@@ -114,7 +114,7 @@ namespace FeigDotNet.Readers
                 byte rssi;
                 byte[] handle;
 
-                switch (type)
+                switch (type) // type = number of bytes + 2, should we remove the switch?
                 {
                     case 0x12:
                         serialNumber = reader.ReadBytes(16);
@@ -158,12 +158,27 @@ namespace FeigDotNet.Readers
             return tags;
         }
 
-        public bool UpdateTagSerialNumber(byte[] serialNumberToChange, byte[] newSerialNumber)
+        public bool UpdateTagSerialNumber(byte[] serialNumberToChange, byte[] newSerialNumber)  // change to UpdateTagSerialNumber(FeigTag tag)
         {
             MemoryStream memoryStream = new MemoryStream();
 
             byte[] command = {0xFF, 0xB0, 0x24, 0x31, (byte) serialNumberToChange.Length };
-            byte[] separator = {0x01, 0x00, 0x01, 0x09, 0x02, 0x40, 0x00};
+
+            byte[] separator;
+
+            switch (serialNumberToChange.Length) // take type from FeigTag
+            {
+                case 16:
+                    separator = new byte[] { 0x01, 0x00, 0x01, 0x09, 0x02, 0x40, 0x00 };
+                    break;
+
+                case 30:
+                    separator = new byte[] { 0x01, 0x00, 0x01, 0x10, 0x02, 0x78, 0x00 };
+                    break;
+
+                default:
+                    throw new FeigException("Not supported tag");
+            }
 
             memoryStream.Write(command, 0, command.Length);
             memoryStream.Write(serialNumberToChange, 0, serialNumberToChange.Length);
