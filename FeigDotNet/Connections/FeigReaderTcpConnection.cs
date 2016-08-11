@@ -114,12 +114,19 @@ namespace FeigDotNet.Connections
             for (int i = startIndex; i < length; i++)
             {
                 crc ^= buffer[i];
+
                 for (int j = 0; j < 8; j++)
                 {
                     uint tmp = crc & 0x0001;
+
                     if (tmp == 0x0001)
+                    {
                         crc = (crc >> 1) ^ CRC_POLYNOM;
-                    else crc = (crc >> 1);
+                    }
+                    else
+                    {
+                        crc = (crc >> 1);
+                    }
                 }
             }
 

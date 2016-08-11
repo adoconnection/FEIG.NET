@@ -102,10 +102,12 @@ namespace FeigDotNet.Configuration
             {
                 throw new NotSupportedException("Min value is 0.1");
             }
+
             if (rounded > 2)
             {
                 throw new NotSupportedException("Max value is 2");
             }
+
             return rounded;
         }
     }

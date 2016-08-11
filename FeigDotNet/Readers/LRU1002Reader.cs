@@ -111,6 +111,7 @@ namespace FeigDotNet.Readers
                 byte status;
                 byte antenna;
                 byte rssi;
+                byte[] handle;
 
                 switch (type)
                 {
@@ -138,8 +139,7 @@ namespace FeigDotNet.Readers
                 antenna = reader.ReadByte();
                 reader.ReadByte();
                 rssi = reader.ReadByte();
-                reader.ReadByte();
-                reader.ReadByte();
+                handle = reader.ReadBytes(2);
                 reader.ReadByte();
                 reader.ReadByte();
 
@@ -148,6 +148,7 @@ namespace FeigDotNet.Readers
                     SerialNumber = serialNumber,
                     PS = ps,
                     Antenna = antenna,
+                    Handle = handle,
                     RSSI = -rssi
                 });
 

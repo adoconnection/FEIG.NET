@@ -66,7 +66,7 @@ namespace FeigDotNet.Configuration
 
         public virtual void Write()
         {
-            if (this.HasChanges)
+            if (!this.HasChanges)
             {
                 return;
             }
