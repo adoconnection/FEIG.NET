@@ -9,7 +9,7 @@ namespace FeigDotNet.Configuration
         private readonly FeigReaderConfigurationBank configurationBank94;
 
 
-        public LRU1002RFInterfaceReaderConfiguration(FeigReaderTcpConnection connection)
+        public LRU1002RFInterfaceReaderConfiguration(FeigReaderConnection connection)
         {
             this.configurationBank83 = new FeigReaderConfigurationBank(connection, 0x83);
             this.configurationBank94 = new FeigReaderConfigurationBank(connection, 0x94);

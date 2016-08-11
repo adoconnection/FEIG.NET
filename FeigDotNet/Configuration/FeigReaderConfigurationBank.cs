@@ -6,7 +6,7 @@ namespace FeigDotNet.Configuration
 {
     public class FeigReaderConfigurationBank
     {
-        private readonly FeigReaderTcpConnection connection;
+        private readonly FeigReaderConnection connection;
 
         private readonly byte address;
         private byte[] dataBytes;
@@ -28,7 +28,7 @@ namespace FeigDotNet.Configuration
             }
         }
 
-        public FeigReaderConfigurationBank(FeigReaderTcpConnection connection, byte address)
+        public FeigReaderConfigurationBank(FeigReaderConnection connection, byte address)
         {
             this.address = address;
             this.connection = connection;

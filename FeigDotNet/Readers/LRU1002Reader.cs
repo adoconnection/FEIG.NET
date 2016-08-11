@@ -15,7 +15,7 @@ namespace FeigDotNet.Readers
         public LRU1002PersistenceModeReaderConfiguration PersistenceMode { get; }
         public LRU1002MultiplexerReaderConfiguration Multiplexer { get; }
 
-        public LRU1002Reader(FeigReaderTcpConnection connection) : base(connection)
+        public LRU1002Reader(FeigReaderConnection connection) : base(connection)
         {
             this.InterfaceMode = new LRU1002InterfaceModeReaderConfiguration(connection);
             this.RFInterface = new LRU1002RFInterfaceReaderConfiguration(connection);

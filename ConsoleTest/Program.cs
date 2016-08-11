@@ -34,7 +34,7 @@ namespace ConsoleTest
 
             Console.WriteLine("\n\n");
 
-            using (FeigReaderTcpConnection connection = new FeigReaderTcpConnection("192.168.1.125", 10001)) 
+            using (FeigReaderConnection connection = new FeigReaderTcpConnection("192.168.1.125", 10001)) 
             {
                 LRU1002Reader reader = new LRU1002Reader(connection);
                 //UpdateConfiguration(reader);

@@ -5,9 +5,9 @@ namespace FeigDotNet.Readers
 {
     public abstract class LRUReader
     {
-        public FeigReaderTcpConnection Connection { get; }
+        public FeigReaderConnection Connection { get; }
 
-        protected LRUReader(FeigReaderTcpConnection connection)
+        protected LRUReader(FeigReaderConnection connection)
         {
             this.Connection = connection;
         }

@@ -6,7 +6,7 @@ namespace FeigDotNet.Configuration
     {
         private readonly FeigReaderConfigurationBank configurationBank;
 
-        public LRU1002MultiplexerReaderConfiguration(FeigReaderTcpConnection connection)
+        public LRU1002MultiplexerReaderConfiguration(FeigReaderConnection connection)
         {
             this.configurationBank = new FeigReaderConfigurationBank(connection, 0x8F);
         }
