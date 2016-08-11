@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using FeigDotNet;
 using FeigDotNet.Configuration;
@@ -38,6 +39,14 @@ namespace ConsoleTest
                 LRU1002Reader reader = new LRU1002Reader(connection);
                 //UpdateConfiguration(reader);
 
+                bool result = reader.UpdateTagSerialNumber(
+                    new byte[] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x02, 0x03, 0x12 },
+                    new byte[] { 0xE0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x02, 0x03, 0x1F }
+                    );
+
+                Console.WriteLine("Tag updated: " + result);
+                Console.WriteLine("\n\n");
+
                 while (true)
                 {
                     DateTime startDateTime = DateTime.Now;
@@ -52,6 +61,8 @@ namespace ConsoleTest
                     Console.WriteLine("in " + (endDateTime - startDateTime).TotalMilliseconds);
 
                     Console.ReadKey();
+                    
+                   // Thread.Sleep(500);
                     Console.Clear();
                 }
                

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using FeigDotNet.Configuration;
 using FeigDotNet.Connections;
 
@@ -157,10 +158,28 @@ namespace FeigDotNet.Readers
             return tags;
         }
 
+        public bool UpdateTagSerialNumber(byte[] serialNumberToChange, byte[] newSerialNumber)
+        {
+            MemoryStream memoryStream = new MemoryStream();
+
+            byte[] command = {0xFF, 0xB0, 0x24, 0x31, (byte) serialNumberToChange.Length };
+            byte[] separator = {0x01, 0x00, 0x01, 0x09, 0x02, 0x40, 0x00};
+
+            memoryStream.Write(command, 0, command.Length);
+            memoryStream.Write(serialNumberToChange, 0, serialNumberToChange.Length);
+            memoryStream.Write(separator, 0, separator.Length);
+            memoryStream.Write(newSerialNumber, 0, newSerialNumber.Length);
+
+            memoryStream.Position = 0;
+
+            byte[] data = this.Connection.SendAndRecieve(memoryStream.ToArray());
+
+            return (data.Length == 3 && data[0] == 0x00 && data[1] == 0xb0 && data[2] == 0x00);
+        }
+
         private void RFControllerReset()
         {
             this.Connection.SendAndRecieve(0xff, 0x63);
         }
-
     }
 }
