@@ -28,7 +28,7 @@ namespace ConsoleTest
 
                 foreach (FeigReaderInfo readerInfo in pair.Value)
                 {
-                    Console.WriteLine(" - " + readerInfo.Type + " - " + ArrayToString(readerInfo.DeviceID) + " - " + readerInfo.IPAddress + ":" + readerInfo.Port);
+                    Console.WriteLine(" - " + readerInfo.Type + " - " + ArrayToString(readerInfo.DeviceID) + " - " + readerInfo.IPAddress + ":" + readerInfo.Port + " (" + readerInfo.MacAddress + ")");
                 }
             }
 
