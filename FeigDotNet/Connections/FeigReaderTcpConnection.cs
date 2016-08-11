@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Net.Sockets;
+using FeigDotNet.Exceptions;
 
 namespace FeigDotNet.Connections
 {
@@ -8,13 +9,15 @@ namespace FeigDotNet.Connections
     {
         private readonly string readerHostAddress;
         private readonly int readerPortNumber;
+        private readonly int timeout;
         private Socket tcpConnection = null;
         private bool isConnected = false;
 
-        public FeigReaderTcpConnection(string readerHostAddress, int readerPortNumber)
+        public FeigReaderTcpConnection(string readerHostAddress, int readerPortNumber, int timeout = 1000)
         {
             this.readerHostAddress = readerHostAddress;
             this.readerPortNumber = readerPortNumber;
+            this.timeout = timeout;
         }
 
         public override void Open()
@@ -25,6 +28,9 @@ namespace FeigDotNet.Connections
             }
 
             this.tcpConnection = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            this.tcpConnection.ReceiveTimeout = this.timeout;
+            this.tcpConnection.SendTimeout = this.timeout;
+
             this.tcpConnection.Connect(new IPEndPoint(IPAddress.Parse(this.readerHostAddress), this.readerPortNumber));
 
             this.isConnected = true;
@@ -71,7 +77,14 @@ namespace FeigDotNet.Connections
             package[data.Length + 3] = crc16[0];
             package[data.Length + 4] = crc16[1];
 
-            int res = this.tcpConnection.Send(package);
+            try
+            {
+                int res = this.tcpConnection.Send(package);
+            }
+            catch (SocketException e)
+            {
+                throw new FeigConnectionException("Unable to send data", e);
+            }
         }
 
         public byte[] Recieve()
@@ -81,29 +94,35 @@ namespace FeigDotNet.Connections
                 throw new FeigException("Connection closed");
             }
 
-            byte[] responseTypeBuffer = new byte[1];
-            this.tcpConnection.Receive(responseTypeBuffer);
-
-            if (responseTypeBuffer[0] != 0x02)
+            try
             {
-                throw new Exception("Connection issue");
+                byte[] responseTypeBuffer = new byte[1];
+                this.tcpConnection.Receive(responseTypeBuffer);
+
+                if (responseTypeBuffer[0] != 0x02)
+                {
+                    throw new FeigConnectionException("Invalid reader response");
+                }
+
+                byte[] dataLengthBuffer = new byte[2];
+                this.tcpConnection.Receive(dataLengthBuffer);
+
+                Array.Reverse(dataLengthBuffer);
+
+                short dataLength = BitConverter.ToInt16(dataLengthBuffer, 0);
+
+                byte[] dataBuffer = new byte[dataLength - 5];
+                this.tcpConnection.Receive(dataBuffer);
+
+                byte[] signatureBuffer = new byte[2];
+                this.tcpConnection.Receive(signatureBuffer);
+
+                return dataBuffer;
             }
-
-            byte[] dataLengthBuffer = new byte[2];
-            this.tcpConnection.Receive(dataLengthBuffer);
-
-            Array.Reverse(dataLengthBuffer);
-
-            short dataLength = BitConverter.ToInt16(dataLengthBuffer, 0);
-
-            byte[] dataBuffer = new byte[dataLength - 5];
-            this.tcpConnection.Receive(dataBuffer);
-
-            byte[] signatureBuffer = new byte[2];
-            this.tcpConnection.Receive(signatureBuffer);
-
-
-            return dataBuffer;
+            catch (SocketException e)
+            {
+                throw new FeigConnectionException("Unable to recieve data", e);
+            }
         }
 
         private byte[] FastCRC16(byte[] buffer, int startIndex, int length)

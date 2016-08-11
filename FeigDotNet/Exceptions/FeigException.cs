@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace FeigDotNet
+namespace FeigDotNet.Exceptions
 {
     public class FeigException : Exception
     {
