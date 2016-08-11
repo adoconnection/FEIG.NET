@@ -1,7 +1,7 @@
 # FEIG.NET
 Pure C# client for FEIG LRU readers
 
-Inventory Example:
+Inventory sample:
 
 ```cs
 using (FeigReaderTcpConnection connection = new FeigReaderTcpConnection("192.168.1.125", 10001))
@@ -19,6 +19,25 @@ using (FeigReaderTcpConnection connection = new FeigReaderTcpConnection("192.168
     }
 }
 
+```
+
+Discovery sample:
+
+```cs
+FeigReaderDiscovery discovery = new FeigReaderDiscovery();
+
+IList<NetworkInterface> networkInterfaces = discovery.ListNetworkInterfaces();
+IDictionary<NetworkInterface, List<FeigReaderInfo>> pairs = discovery.FindReaders(networkInterfaces);
+
+foreach (KeyValuePair<NetworkInterface, List<FeigReaderInfo>> pair in pairs)
+{
+    Console.WriteLine("Network interface name: " + pair.Key.Name);
+
+    foreach (FeigReaderInfo readerInfo in pair.Value)
+    {
+        Console.WriteLine(" - " + readerInfo.Type + " - " + ArrayToString(readerInfo.DeviceID) + " - " + readerInfo.IPAddress);
+    }
+}
 ```
 
 
