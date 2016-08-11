@@ -21,6 +21,20 @@ using (FeigReaderTcpConnection connection = new FeigReaderTcpConnection("192.168
 
 ```
 
+Change tag serial number:
+
+```cs
+using (FeigReaderTcpConnection connection = new FeigReaderTcpConnection("192.168.1.125", 10001))
+{
+    LRU1002Reader reader = new LRU1002Reader(connection);
+
+    byte[] oldSerialNumber = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x02, 0x03, 0x12 };
+    byte[] newSerialNumber = { 0xE0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x02, 0x03, 0x1F };
+
+    bool isSuccess = reader.UpdateTagSerialNumber(oldSerialNumber, newSerialNumber);
+}
+```
+
 Discovery sample:
 
 ```cs
