@@ -16,20 +16,20 @@ namespace ConsoleTest
     {
         static void Main(string[] args)
         {
-            FeigReaderDiscovery discovery = new FeigReaderDiscovery();
+FeigReaderDiscovery discovery = new FeigReaderDiscovery();
 
-            IList<NetworkInterface> networkInterfaces = discovery.ListNetworkInterfaces();
-            IDictionary<NetworkInterface, List<FeigReaderInfo>> pairs = discovery.FindReaders(networkInterfaces);
+IList<NetworkInterface> networkInterfaces = discovery.ListNetworkInterfaces();
+IDictionary<NetworkInterface, List<FeigReaderInfo>> pairs = discovery.FindReaders(networkInterfaces);
 
-            foreach (KeyValuePair<NetworkInterface, List<FeigReaderInfo>> pair in pairs)
-            {
-                Console.WriteLine("Network interface name: " + pair.Key.Name);
+foreach (KeyValuePair<NetworkInterface, List<FeigReaderInfo>> pair in pairs)
+{
+    Console.WriteLine("Network interface name: " + pair.Key.Name);
 
-                foreach (FeigReaderInfo readerInfo in pair.Value)
-                {
-                    Console.WriteLine(" - " + readerInfo.Type + " - " + ArrayToString(readerInfo.DeviceID) + " - " + readerInfo.IPAddress);
-                }
-            }
+    foreach (FeigReaderInfo readerInfo in pair.Value)
+    {
+        Console.WriteLine(" - " + readerInfo.Type + " - " + ArrayToString(readerInfo.DeviceID) + " - " + readerInfo.IPAddress);
+    }
+}
 
             Console.WriteLine("\n\n");
 

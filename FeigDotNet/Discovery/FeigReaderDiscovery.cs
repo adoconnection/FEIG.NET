@@ -83,20 +83,14 @@ namespace FeigDotNet.Discovery
             readerInfo.DeviceID = buffer.Skip(6).Take(4).ToArray();
             readerInfo.IPAddress = string.Format("{0}.{1}.{2}.{3}", buffer[16], buffer[17], buffer[18], buffer[19]);
 
-            switch (buffer[5])
+            FeigReaderType feigReaderType;
+
+            if (!Enum.TryParse(buffer[5].ToString(), out feigReaderType))
             {
-                case 91:
-                    readerInfo.Type = FeigReaderType.LRU1002;
-                    break;
-
-                case 94:
-                    readerInfo.Type = FeigReaderType.LRU3000;
-                    break;
-
-                default:
-                    readerInfo.Type = FeigReaderType.Undefined;
-                    break;
+                feigReaderType = FeigReaderType.Undefined;
             }
+
+            readerInfo.Type = feigReaderType;
 
             if ((buffer[3] & 0x02) == 0x02)
             {
