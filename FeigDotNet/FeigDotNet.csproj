@@ -40,6 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Connections\FeigReaderType.cs" />
+    <Compile Include="Configuration\FeigRegulation.cs" />
     <Compile Include="Configuration\LRU1002AnticollisionReaderConfiguration.cs" />
     <Compile Include="Configuration\LRU1002InterfaceModeReaderConfiguration.cs" />
     <Compile Include="Configuration\LRU1002MultiplexerReaderConfiguration.cs" />
@@ -48,6 +50,8 @@
     <Compile Include="Configuration\FeigReaderConfigurationBank.cs" />
     <Compile Include="Configuration\FeigReaderAntenna.cs" />
     <Compile Include="Configuration\FeigReaderMode.cs" />
+    <Compile Include="Discovery\FeigReaderDiscovery.cs" />
+    <Compile Include="Discovery\FeigReaderInfo.cs" />
     <Compile Include="FeigException.cs" />
     <Compile Include="FeigTag.cs" />
     <Compile Include="Readers\LRU1002Reader.cs" />

@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
 using FeigDotNet;
 using FeigDotNet.Configuration;
 using FeigDotNet.Connections;
+using FeigDotNet.Discovery;
 using FeigDotNet.Readers;
 
 namespace ConsoleTest
@@ -14,10 +16,27 @@ namespace ConsoleTest
     {
         static void Main(string[] args)
         {
+            FeigReaderDiscovery discovery = new FeigReaderDiscovery();
+
+            IList<NetworkInterface> networkInterfaces = discovery.ListNetworkInterfaces();
+            IDictionary<NetworkInterface, List<FeigReaderInfo>> pairs = discovery.FindReaders(networkInterfaces);
+
+            foreach (KeyValuePair<NetworkInterface, List<FeigReaderInfo>> pair in pairs)
+            {
+                Console.WriteLine("Network interface name: " + pair.Key.Name);
+
+                foreach (FeigReaderInfo readerInfo in pair.Value)
+                {
+                    Console.WriteLine(" - " + readerInfo.Type + " - " + ArrayToString(readerInfo.DeviceID) + " - " + readerInfo.IPAddress);
+                }
+            }
+
+            Console.WriteLine("\n\n");
+
             using (FeigReaderTcpConnection connection = new FeigReaderTcpConnection("192.168.1.125", 10001)) 
             {
                 LRU1002Reader reader = new LRU1002Reader(connection);
-                UpdateConfiguration(reader);
+                //UpdateConfiguration(reader);
 
                 while (true)
                 {
@@ -31,8 +50,6 @@ namespace ConsoleTest
                     }
 
                     Console.WriteLine("in " + (endDateTime - startDateTime).TotalMilliseconds);
-
-                    //byte[] sendAndRecieve = connection.SendAndRecieve(0xFF, 0xB0, 0x24, 0x30, 0x01, 0x00, 0x01, 0x07, 0x02, 0x30, 0x00, 0x20, 0x14, 0x12, 0x19, 0x87, 0x40, 0x03, 0x00, 0x01, 0x02, 0x2F, 0xBE);
 
                     Console.ReadKey();
                     Console.Clear();

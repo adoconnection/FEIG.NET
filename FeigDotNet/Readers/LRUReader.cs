@@ -1,4 +1,5 @@
-﻿using FeigDotNet.Connections;
+﻿using FeigDotNet.Configuration;
+using FeigDotNet.Connections;
 
 namespace FeigDotNet.Readers
 {

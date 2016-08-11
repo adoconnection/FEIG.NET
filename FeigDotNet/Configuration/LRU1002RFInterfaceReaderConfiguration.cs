@@ -27,6 +27,18 @@ namespace FeigDotNet.Configuration
             }
         }
 
+        public FeigRegulation Regulation
+        {
+            get
+            {
+                return (FeigRegulation) this.configurationBank83.GetByte(3);
+            }
+            set
+            {
+                this.configurationBank83.SetByte(3, (byte) value);
+            }
+        }
+
         public double Antenna1Power
         {
             get
