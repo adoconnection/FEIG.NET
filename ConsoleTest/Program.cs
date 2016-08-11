@@ -14,21 +14,30 @@ namespace ConsoleTest
     {
         static void Main(string[] args)
         {
-            using (FeigReaderTcpConnection connection = new FeigReaderTcpConnection("192.168.1.125", 10001))
+            using (FeigReaderTcpConnection connection = new FeigReaderTcpConnection("192.168.1.125", 10001)) 
             {
                 LRU1002Reader reader = new LRU1002Reader(connection);
                 UpdateConfiguration(reader);
 
-                DateTime startDateTime = DateTime.Now;
-                IList<FeigTag> tags = reader.Inventory(FeigReaderAntenna.Antenna1, FeigReaderAntenna.Antenna4);
-                DateTime endDateTime = DateTime.Now;
-
-                foreach (FeigTag tag in tags)
+                while (true)
                 {
-                    Console.WriteLine("Ant. " + tag.Antenna + " " + tag.RSSI + " dBm, " + ArrayToString(tag.SerialNumber));
-                }
+                    DateTime startDateTime = DateTime.Now;
+                    IList<FeigTag> tags = reader.Inventory(FeigReaderAntenna.Antenna1, FeigReaderAntenna.Antenna4);
+                    DateTime endDateTime = DateTime.Now;
 
-                Console.WriteLine("in " + (endDateTime - startDateTime).TotalMilliseconds);
+                    foreach (FeigTag tag in tags)
+                    {
+                        Console.WriteLine("Ant. " + tag.Antenna + " " + tag.RSSI + " dBm, " + ArrayToString(tag.SerialNumber) + " - " + ArrayToString(tag.Handle));
+                    }
+
+                    Console.WriteLine("in " + (endDateTime - startDateTime).TotalMilliseconds);
+
+                    //byte[] sendAndRecieve = connection.SendAndRecieve(0xFF, 0xB0, 0x24, 0x30, 0x01, 0x00, 0x01, 0x07, 0x02, 0x30, 0x00, 0x20, 0x14, 0x12, 0x19, 0x87, 0x40, 0x03, 0x00, 0x01, 0x02, 0x2F, 0xBE);
+
+                    Console.ReadKey();
+                    Console.Clear();
+                }
+               
             }
 
             Console.ReadKey();
