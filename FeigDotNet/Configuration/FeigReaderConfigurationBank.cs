@@ -16,15 +16,7 @@ namespace FeigDotNet.Configuration
         {
             get
             {
-                for (int i = 0; i < this.dataBytes.Length; i++)
-                {
-                    if (this.dataBytes[i] != this.initialDataBytes[i])
-                    {
-                        return true;
-                    }
-                }
-
-                return false;
+                return this.dataBytes.Where((dataByte, index) => dataByte != this.initialDataBytes[index]).Any();
             }
         }
 
@@ -61,7 +53,7 @@ namespace FeigDotNet.Configuration
         public virtual void Read()
         {
             this.dataBytes = this.connection.SendAndRecieve(0xFF, 0x80, this.address).Skip(3).ToArray();
-            this.initialDataBytes = this.dataBytes;
+            this.initialDataBytes = (byte[])this.dataBytes.Clone();
         }
 
         public virtual void Write()
@@ -78,9 +70,9 @@ namespace FeigDotNet.Configuration
             message[1] = 0x81;
             message[2] = this.address;
 
-            this.connection.SendAndRecieve(message);
+            byte[] sendAndRecieve = this.connection.SendAndRecieve(message);
 
-            this.initialDataBytes = this.dataBytes;
+            this.initialDataBytes = (byte[])this.dataBytes.Clone();
         }
     }
 }

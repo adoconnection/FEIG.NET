@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using FeigDotNet.Configuration;
 using FeigDotNet.Connections;
+using FeigDotNet.Discovery;
 using FeigDotNet.Exceptions;
 
 namespace FeigDotNet.Readers
@@ -34,7 +36,7 @@ namespace FeigDotNet.Readers
 
             this.RFControllerReset();
         }
-        
+
         /// <summary>
         /// No RSSI and antenna info
         /// </summary>
@@ -63,22 +65,22 @@ namespace FeigDotNet.Readers
                 switch (type) // type = number of bytes + 2, should we remove the switch? 
                 {
                     case 0x12:
-                        tags.Add(new FeigTag { SerialNumber = reader.ReadBytes(16)});
+                        tags.Add(new FeigTag {SerialNumber = reader.ReadBytes(16)});
                         break;
 
                     case 0x0E:
-                        tags.Add(new FeigTag { SerialNumber = reader.ReadBytes(12) });
+                        tags.Add(new FeigTag {SerialNumber = reader.ReadBytes(12)});
                         break;
 
                     case 0x20:
-                        tags.Add(new FeigTag { SerialNumber = reader.ReadBytes(30) });
+                        tags.Add(new FeigTag {SerialNumber = reader.ReadBytes(30)});
                         break;
                 }
             }
 
             return tags;
         }
-        
+
         public IList<FeigTag> Inventory(params FeigReaderAntenna[] antennas)
         {
             int antennasByte = 0;
@@ -95,9 +97,49 @@ namespace FeigDotNet.Readers
 
             BinaryReader reader = new BinaryReader(memoryStream);
 
-            byte[] readBytes = reader.ReadBytes(3);
+            byte[] commandResult;
 
-            short tagsCount = reader.ReadByte();
+            try
+            {
+                commandResult = reader.ReadBytes(3);
+            }
+            catch (EndOfStreamException e)
+            {
+                throw new FeigConnectionException("Invalid reader response", e);
+            }
+
+            if (commandResult[0] == 0x00 && commandResult[1] == 0xb0 && commandResult[2] == 0x01)
+            {
+                // no tags in field
+                return new List<FeigTag>();
+            }
+
+            if (commandResult[0] == 0x00 && commandResult[1] == 0xb0 && commandResult[2] == 0x84)
+            {
+                throw new FeigInventoryException(commandResult[2], "antennas not ready, check attachmets");
+            }
+
+            if (commandResult[0] == 0x00 && commandResult[1] == 0xb0 && commandResult[2] == 0x01)
+            {
+                // no tags in field
+                return new List<FeigTag>();
+            }
+
+            if (!(commandResult[0] == 0x00 && commandResult[1] == 0xb0 && commandResult[2] == 0x00))
+            {
+                throw new FeigInventoryException(commandResult[2], "antennas not ready");
+            }
+
+            short tagsCount;
+
+            try
+            {
+                tagsCount = reader.ReadByte();
+            }
+            catch (EndOfStreamException e)
+            {
+                throw new FeigInventoryException(commandResult[2], "none of selected antennas are ready");
+            }
 
             IList<FeigTag> tags = new List<FeigTag>();
 
