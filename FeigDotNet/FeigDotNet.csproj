@@ -50,6 +50,7 @@
     <Compile Include="Configuration\FeigReaderConfigurationBank.cs" />
     <Compile Include="Configuration\FeigReaderAntenna.cs" />
     <Compile Include="Configuration\FeigReaderMode.cs" />
+    <Compile Include="Discovery\FeigInventoryException.cs" />
     <Compile Include="Discovery\FeigReaderDiscovery.cs" />
     <Compile Include="Discovery\FeigReaderInfo.cs" />
     <Compile Include="Exceptions\FeigConnectionException.cs" />
